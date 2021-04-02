@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -23,7 +24,7 @@ namespace BlazorChat.Client
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BlazorChat.ServerAPI"));
-
+            builder.Services.AddMudServices();
             builder.Services.AddApiAuthorization();
 
             await builder.Build().RunAsync();
