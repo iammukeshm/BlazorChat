@@ -1,9 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
-
 <AuthorizeView>
     <Authorized>
         <div class="pa-4 justify-center my-4 mud-text-align-center">
@@ -18,7 +16,6 @@
         </div>
     </NotAuthorized>
 </AuthorizeView>
-
 @code{
     private async Task BeginSignOut(MouseEventArgs args)
     {
