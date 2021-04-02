@@ -1,7 +1,17 @@
-﻿@page "/"
+﻿@page "/home"
+@page "/"
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<MudContainer Style="margin-top: 64px;">
+    <MudGrid>
+        <MudItem xs="12" sm="12" md="12">
+            <MudText Align="Align.Center" Typo="Typo.h2" Class="mt-4">Blazor Chat</MudText>
+            <MudText  Align="Align.Center"  Typo="Typo.subtitle1" Class="smaller">Complete Chat Application in Blazor WebAssembly 5.0 with SignalR and Identity. UI is taken care by MudBlazor Component Library.</MudText>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
+            <div class="pa-4 justify-center my-4 mud-text-align-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="https://codewithmukesh.com/blog/realtime-chat-application-with-blazor/" Target="_blank">Read Guide</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" Link="https://www.buymeacoffee.com/codewithmukesh" Target="_blank">Buy Me A Coffee!</MudButton>
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
