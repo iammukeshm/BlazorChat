@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.SignalR.Client;
+<audio id="notification" src="/media/notification.mp3" />
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -40,20 +41,20 @@
         {
             if (CurrentUserId == receiverUserId)
             {
-                //_jsRuntime.InvokeAsync<string>("PlayAudio", "notification");
+                _jsRuntime.InvokeAsync<string>("PlayAudio", "notification");
                 _snackBar.Add(message, Severity.Info, config =>
-                {
-                    config.VisibleStateDuration = 10000;
-                    config.HideTransitionDuration = 500;
-                    config.ShowTransitionDuration = 500;
-                    config.Action = "Chat?";
-                    config.ActionColor = Color.Info;
-                    config.Onclick = snackbar =>
+                                {
+                        config.VisibleStateDuration = 10000;
+                        config.HideTransitionDuration = 500;
+                        config.ShowTransitionDuration = 500;
+                        config.Action = "Chat?";
+                        config.ActionColor = Color.Info;
+                        config.Onclick = snackbar =>
                     {
                         _navigationManager.NavigateTo($"chat/{senderUserId}");
                         return Task.CompletedTask;
                     };
-                });
+                    });
             }
         });
         var state = await _stateProvider.GetAuthenticationStateAsync();

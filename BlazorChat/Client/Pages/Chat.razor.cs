@@ -17,10 +17,6 @@ namespace BlazorChat.Client.Pages
         [Parameter] public string CurrentUserId { get; set; }
         [Parameter] public string CurrentUserEmail { get; set; }
         private List<ChatMessage> messages = new List<ChatMessage>();
-        //protected override async Task OnAfterRenderAsync(bool firstRender)
-        //{
-        //    //await _jsRuntime.InvokeAsync<string>("ScrollToBottom", "chatContainer");
-        //}
         private async Task SubmitAsync()
         {
             if (!string.IsNullOrEmpty(CurrentMessage) && !string.IsNullOrEmpty(ContactId))
@@ -39,6 +35,10 @@ namespace BlazorChat.Client.Pages
                 CurrentMessage = string.Empty;
             }
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await _jsRuntime.InvokeAsync<string>("ScrollToBottom", "chatContainer");
+        }
         protected override async Task OnInitializedAsync()
         {
             if (hubConnection == null)
@@ -53,16 +53,17 @@ namespace BlazorChat.Client.Pages
             {
                 if ((ContactId == message.ToUserId && CurrentUserId == message.FromUserId) || (ContactId == message.FromUserId && CurrentUserId == message.ToUserId))
                 {
-                   
+
                     if ((ContactId == message.ToUserId && CurrentUserId == message.FromUserId))
                     {
-                        messages.Add(new ChatMessage { Message = message.Message, CreatedDate = message.CreatedDate, FromUser = new ApplicationUser() { Email = CurrentUserEmail } } );
+                        messages.Add(new ChatMessage { Message = message.Message, CreatedDate = message.CreatedDate, FromUser = new ApplicationUser() { Email = CurrentUserEmail } });
                         await hubConnection.SendAsync("ChatNotificationAsync", $"New Message From {userName}", ContactId, CurrentUserId);
                     }
                     else if ((ContactId == message.FromUserId && CurrentUserId == message.ToUserId))
                     {
                         messages.Add(new ChatMessage { Message = message.Message, CreatedDate = message.CreatedDate, FromUser = new ApplicationUser() { Email = ContactEmail } });
                     }
+                    await _jsRuntime.InvokeAsync<string>("ScrollToBottom", "chatContainer");
                     StateHasChanged();
                 }
             });
@@ -85,7 +86,6 @@ namespace BlazorChat.Client.Pages
             ContactId = contact.Id;
             ContactEmail = contact.Email;
             _navigationManager.NavigateTo($"chat/{ContactId}");
-            //Load messages from db here
             messages = new List<ChatMessage>();
             messages = await _chatManager.GetConversationAsync(ContactId);
         }
