@@ -8,13 +8,11 @@
 <MudLayout>
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h6" Class="ml-4">Blazor Chat</MudText>
         <MudAppBarSpacer />
-        <LoginDisplay/>
+        <LoginDisplay />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Blazor Chat</MudText>
-        </MudDrawerHeader>
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
@@ -23,7 +21,7 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    bool _drawerOpen = false;
 
     void DrawerToggle()
     {
