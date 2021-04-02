@@ -10,3 +10,11 @@
 @using BlazorChat.Client
 @using BlazorChat.Client.Shared
 @using MudBlazor
+
+@inject NavigationManager _navigationManager
+@inject ISnackbar _snackBar
+@inject IJSRuntime _jsRuntime
+@inject AuthenticationStateProvider _stateProvider;
+
+@using BlazorChat.Client.Managers
+@inject IChatManager _chatManager
