@@ -1,12 +1,16 @@
 using BlazorChat.Server.Data;
 using BlazorChat.Shared;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using System.Text.Json.Serialization;
 
 namespace BlazorChat.Server
 {
@@ -24,6 +28,8 @@ namespace BlazorChat.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
+            // Register the Swagger services
+            services.AddSwaggerDocument();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -39,7 +45,14 @@ namespace BlazorChat.Server
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.AddControllersWithViews();
+            services.TryAddEnumerable(
+                ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>,
+                    ConfigureJwtBearerOptions>());
+
+            services.AddControllersWithViews().AddJsonOptions(o => {
+                o.JsonSerializerOptions
+                  .ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            }); ;
             services.AddRazorPages();
         }
 
@@ -63,6 +76,10 @@ namespace BlazorChat.Server
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
             app.UseRouting();
 
             app.UseIdentityServer();
@@ -71,10 +88,11 @@ namespace BlazorChat.Server
 
             app.UseEndpoints(endpoints =>
             {
+
+                endpoints.MapHub<SignalRServerHub>("/signalRHub");
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
-                endpoints.MapHub<SignalRHub>("/signalRHub");
             });
         }
     }
